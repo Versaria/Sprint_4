@@ -5,11 +5,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Page Object для главной страницы Яндекс. Самоката.
  * Содержит методы для взаимодействия со всеми элементами главной страницы.
+
+ * Исправления:
+ * 1. Удален неиспользуемый локатор faqAnswers и метод getFaqAnswers()
+ * 2. Метод closeCookieBanner() возвращает void вместо HomePage,
+ *    так как возвращаемое значение не использовалось
+ * 3. Метод openFaqQuestion() теперь возвращает void вместо HomePage,
+ *    так как возвращаемое значение не использовалось
  */
 public class HomePage {
     private final WebDriver driver;
@@ -20,11 +26,9 @@ public class HomePage {
     private final By cookieConfirmButton = By.id("rcc-confirm-button");
     private final By orderTopButton = By.xpath(".//button[text()='Заказать' and contains(@class, 'Button_Button__ra12g')]");
     private final By orderBottomButton = By.xpath(".//div[contains(@class, 'Home_FinishButton')]/button[text()='Заказать']");
-    private final By scooterLogo = By.className("Header_LogoScooter__3lsAR");
     private final By yandexLogo = By.className("Header_LogoYandex__3TSOI");
     private final By orderStatusButton = By.xpath(".//button[text()='Статус заказа']");
     private final By faqQuestions = By.cssSelector("[id^='accordion__heading-']");
-    private final By faqAnswers = By.cssSelector("[id^='accordion__panel-']");
 
     /**
      * Конструктор класса HomePage.
@@ -37,9 +41,8 @@ public class HomePage {
 
     /**
      * Закрывает баннер с куки, если он отображается.
-     * @return текущий экземпляр HomePage
      */
-    public HomePage closeCookieBanner() {
+    public void closeCookieBanner() {
         try {
             List<WebElement> banners = wait.until(
                     ExpectedConditions.presenceOfAllElementsLocatedBy(cookieBanner));
@@ -49,7 +52,6 @@ public class HomePage {
         } catch (Exception e) {
             System.out.println("Cookie banner not found or already closed: " + e.getMessage());
         }
-        return this;
     }
 
     /**
@@ -66,32 +68,12 @@ public class HomePage {
     }
 
     /**
-     * Нажимает на логотип Самоката.
-     * @return текущий экземпляр HomePage
+     * Нажимает на логотип Яндекса.
      */
-    public HomePage clickScooterLogo() {
-        WebElement logo = wait.until(ExpectedConditions.elementToBeClickable(scooterLogo));
-        logo.click();
-        wait.until(ExpectedConditions.urlToBe("https://qa-scooter.praktikum-services.ru/"));
-        return this;
-    }
-
-    /**
-     * Нажимает на логотип Яндекса и переключается на новое окно.
-     * @return URL открытой страницы
-     */
-    public String clickYandexLogoAndSwitchToNewWindow() {
-        String mainWindow = driver.getWindowHandle();
+    public void clickYandexLogo() {
         WebElement logo = wait.until(ExpectedConditions.elementToBeClickable(yandexLogo));
         scrollToElement(logo);
         logo.click();
-
-        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
-        switchToNewWindow(mainWindow);
-
-        String url = driver.getCurrentUrl();
-        closeAndReturnToMainWindow(mainWindow);
-        return url;
     }
 
     /**
@@ -108,9 +90,8 @@ public class HomePage {
     /**
      * Открывает вопрос в FAQ по индексу.
      * @param index индекс вопроса (0-7)
-     * @return текущий экземпляр HomePage
      */
-    public HomePage openFaqQuestion(int index) {
+    public void openFaqQuestion(int index) {
         List<WebElement> questions = wait.until(
                 ExpectedConditions.presenceOfAllElementsLocatedBy(faqQuestions));
 
@@ -122,7 +103,6 @@ public class HomePage {
                 scrollAndClick(questions.get(index));
             }
         }
-        return this;
     }
 
     /**
@@ -153,25 +133,6 @@ public class HomePage {
     private void scrollAndClick(WebElement element) {
         scrollToElement(element);
         element.click();
-    }
-
-    private void switchToNewWindow(String mainWindow) {
-        Set<String> windows = driver.getWindowHandles();
-        for (String window : windows) {
-            if (!window.equals(mainWindow)) {
-                driver.switchTo().window(window);
-                break;
-            }
-        }
-    }
-
-    private void closeAndReturnToMainWindow(String mainWindow) {
-        driver.close();
-        driver.switchTo().window(mainWindow);
-    }
-
-    public By getFaqAnswers() {
-        return faqAnswers;
     }
 }
 

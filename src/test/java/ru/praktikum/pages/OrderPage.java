@@ -9,6 +9,10 @@ import java.util.List;
 /**
  * Page Object для страницы оформления заказа.
  * Содержит методы для работы с формой заказа.
+
+ * Исправления:
+ * 1. Все локаторы вынесены в поля класса
+ * 2. Использован String.format для формирования динамических локаторов
  */
 public class OrderPage {
     private final WebDriver driver;
@@ -31,6 +35,13 @@ public class OrderPage {
     private final By successTitle = By.className("Order_ModalHeader__3FDaJ");
     private final By validationErrors = By.cssSelector(".Input_ErrorMessage__3HvIb");
 
+    // Локаторы для периода аренды
+    private static final String RENTAL_PERIOD_OPTION = "//div[text()='%s']";
+
+    /**
+     * Конструктор класса.
+     * @param driver экземпляр WebDriver
+     */
     public OrderPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -43,9 +54,8 @@ public class OrderPage {
      * @param address Адрес
      * @param metro Станция метро
      * @param phone Телефон
-     * @return текущий экземпляр OrderPage
      */
-    public OrderPage fillFirstPage(String name, String surname, String address, String metro, String phone) {
+    public void fillFirstPage(String name, String surname, String address, String metro, String phone) {
         setFieldValue(nameField, name);
         setFieldValue(surnameField, surname);
         setFieldValue(addressField, address);
@@ -56,7 +66,6 @@ public class OrderPage {
 
         setFieldValue(phoneField, phone);
         clickNextButton();
-        return this;
     }
 
     /**
@@ -65,9 +74,8 @@ public class OrderPage {
      * @param period Период аренды
      * @param color Цвет самоката
      * @param comment Комментарий
-     * @return текущий экземпляр OrderPage
      */
-    public OrderPage fillSecondPage(String date, String period, String color, String comment) {
+    public void fillSecondPage(String date, String period, String color, String comment) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//div[text()='Про аренду']")));
 
@@ -77,7 +85,6 @@ public class OrderPage {
         setComment(comment);
         clickOrderButton();
         confirmOrder();
-        return this;
     }
 
     /**
@@ -99,21 +106,25 @@ public class OrderPage {
      */
     public int getValidationErrorsCount() {
         try {
-            // Явно ждем появления хотя бы одной ошибки
             wait.until(ExpectedConditions.presenceOfElementLocated(validationErrors));
             return driver.findElements(validationErrors).size();
         } catch (TimeoutException e) {
-            return 0; // Если ошибки не появились
+            return 0;
         }
     }
 
     // Приватные вспомогательные методы
+    /**
+     * Выбирает станцию метро из выпадающего списка.
+     * Использует String.format для формирования динамического локатора.
+     */
     private void selectMetroStation(String stationName) {
         WebElement metroInput = driver.findElement(metroField);
         metroInput.click();
         metroInput.clear();
         metroInput.sendKeys(stationName);
 
+        // Используем String.format для формирования локатора
         String xpath = String.format(
                 "//div[contains(@class, 'select-search__select')]//*[contains(text(), '%s')]",
                 stationName
@@ -143,9 +154,16 @@ public class OrderPage {
         dateElement.sendKeys(date, Keys.ENTER);
     }
 
+    /**
+     * Выбирает период аренды из выпадающего списка.
+     * Использует String.format для формирования динамического локатора.
+     */
     private void selectRentalPeriod(String period) {
         driver.findElement(rentalPeriod).click();
-        driver.findElement(By.xpath("//div[text()='" + period + "']")).click();
+
+        // Используем String.format для формирования локатора
+        String periodOptionXpath = String.format(RENTAL_PERIOD_OPTION, period);
+        driver.findElement(By.xpath(periodOptionXpath)).click();
     }
 
     private void selectColor(String color) {
@@ -162,7 +180,7 @@ public class OrderPage {
 
     private void clickOrderButton() {
         WebElement button = driver.findElement(orderButton);
-        ((org.openqa.selenium.JavascriptExecutor) driver)
+        ((JavascriptExecutor) driver)
                 .executeScript("arguments[0].scrollIntoView();", button);
         button.click();
     }
