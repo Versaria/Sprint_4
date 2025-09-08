@@ -5,17 +5,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Page Object для главной страницы Яндекс. Самоката.
  * Содержит методы для взаимодействия со всеми элементами главной страницы.
-
- * Исправления:
- * 1. Удален неиспользуемый локатор faqAnswers и метод getFaqAnswers()
- * 2. Метод closeCookieBanner() возвращает void вместо HomePage,
- *    так как возвращаемое значение не использовалось
- * 3. Метод openFaqQuestion() теперь возвращает void вместо HomePage,
- *    так как возвращаемое значение не использовалось
  */
 public class HomePage {
     private final WebDriver driver;
@@ -122,6 +116,53 @@ public class HomePage {
      */
     public String getCurrentUrl() {
         return driver.getCurrentUrl();
+    }
+
+    /**
+     * Получает handle текущего окна.
+     * @return handle текущего окна
+     */
+    // Добавлены методы для работы с окнами
+    public String getCurrentWindowHandle() {
+        return driver.getWindowHandle();
+    }
+
+    /**
+     * Переключается на указанное окно.
+     * @param windowHandle handle окна для переключения
+     */
+    public void switchToWindow(String windowHandle) {
+        driver.switchTo().window(windowHandle);
+    }
+
+    /**
+     * Закрывает текущее окно.
+     */
+    public void closeCurrentWindow() {
+        driver.close();
+    }
+
+    /**
+     * Ожидает открытия нового окна.
+     * @param expectedWindowCount ожидаемое количество окон
+     */
+    public void waitForNewWindow(int expectedWindowCount) {
+        wait.until(driver -> driver.getWindowHandles().size() == expectedWindowCount);
+    }
+
+    /**
+     * Переключается на новое окно (отличное от текущего).
+     */
+    public void switchToNewWindow() {
+        String currentWindow = driver.getWindowHandle();
+        Set<String> windows = driver.getWindowHandles();
+
+        for (String window : windows) {
+            if (!window.equals(currentWindow)) {
+                driver.switchTo().window(window);
+                break;
+            }
+        }
     }
 
     // Вспомогательные методы

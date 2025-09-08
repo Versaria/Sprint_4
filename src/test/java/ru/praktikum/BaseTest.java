@@ -19,11 +19,16 @@ import java.time.Duration;
  * Базовый класс для всех тестов.
  * Содержит общую логику инициализации и завершения работы тестов.
  * Инициализирует WebDriver, сервисы и открывает базовую страницу.
+
+ * Изменения:
+ * 1. Добавлены методы для работы с окнами.
+ * 2. Убраны неиспользуемые методы.
  */
 public class BaseTest {
     protected WebDriver driver;
     protected OrderService orderService;
     protected FaqService faqService;
+    protected HomePage homePage;
 
     // Конфигурация таймаутов
     private static final int IMPLICIT_WAIT_SECONDS = 5;
@@ -43,12 +48,6 @@ public class BaseTest {
     /**
      * Метод завершения работы после каждого теста.
      * Закрывает браузер и освобождает ресурсы.
-
-     * Исправления:
-     * 1. Удалена константа EXPLICIT_WAIT_SECONDS, так как она больше не используется
-     * 2. Обновлен вызов конструктора UIOrderService - теперь передается только driver
-     * 3. Добавлена поддержка выбора браузера через системное свойство browser
-     * 5. По умолчанию используется Chrome, но можно запустить с Firefox: -Dbrowser=firefox
      */
     @After
     public void tearDown() {
@@ -94,8 +93,9 @@ public class BaseTest {
      * Сервисы используют паттерн Page Object для взаимодействия с UI.
      */
     private void initializeServices() {
-        this.orderService = new UIOrderService(driver);
-        this.faqService = new UIFaqService(driver);
+        this.homePage = new HomePage(driver);
+        this.orderService = new UIOrderService(driver, homePage);
+        this.faqService = new UIFaqService(homePage);
     }
 
     /**
@@ -103,7 +103,7 @@ public class BaseTest {
      */
     private void openBasePage() {
         driver.get(BASE_URL);
-        new HomePage(driver).closeCookieBanner();
+        homePage.closeCookieBanner();
     }
 }
 

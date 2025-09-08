@@ -2,13 +2,8 @@ package ru.praktikum.tests;
 
 import org.junit.Test;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import ru.praktikum.BaseTest;
 import ru.praktikum.core.OrderData;
-import ru.praktikum.pages.HomePage;
-import java.time.Duration;
-import java.util.Set;
 import static org.junit.Assert.*;
 
 /**
@@ -16,6 +11,11 @@ import static org.junit.Assert.*;
  * - валидация пустых полей формы
  * - проверка несуществующего заказа
  * - работа с логотипами Самоката и Яндекса
+
+ * Исправления:
+ * Использует только готовые методы Page Objects.
+ * Нет прямого взаимодействия с WebDriver/WebDriverWait.
+ * Все локаторы и методы работы с элементами вынесены в Page Objects.
  */
 public class AdditionalTest extends BaseTest {
 
@@ -25,11 +25,6 @@ public class AdditionalTest extends BaseTest {
      * 1. Создаем данные с пустыми полями
      * 2. Пытаемся создать заказ через верхнюю кнопку
      * 3. Проверяем количество ошибок валидации
-
-     * Исправления:
-     * 2. Переименуем методы should в tes и доработаем
-     * 1. В методе testShowValidationErrorsForEmptyFields() добавлен второй параметр true
-     * при вызове orderService.createOrder(), чтобы указать использование верхней кнопки
      */
     @Test
     public void testShowValidationErrorsForEmptyFields() {
@@ -73,7 +68,7 @@ public class AdditionalTest extends BaseTest {
      */
     @Test
     public void testReturnToMainPageWhenClickScooterLogo() {
-        String currentUrl = new HomePage(driver)
+        String currentUrl = homePage
                 .clickOrderStatusButton()
                 .clickScooterLogo()
                 .getCurrentUrl();
@@ -90,31 +85,21 @@ public class AdditionalTest extends BaseTest {
      */
     @Test
     public void testOpenYandexPageWhenClickYandexLogo() {
-        HomePage homePage = new HomePage(driver);
-
-        // Запоминаем текущее количество вкладок
-        int initialWindowCount = driver.getWindowHandles().size();
-
+        String mainWindow = homePage.getCurrentWindowHandle();
         homePage.clickYandexLogo();
 
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(5))
-                    .until(ExpectedConditions.numberOfWindowsToBe(initialWindowCount + 1));
+        // Ждем появления нового окна
+        homePage.waitForNewWindow(2);
 
-            // Закрываем новую вкладку и возвращаемся
-            String mainWindow = driver.getWindowHandle();
-            Set<String> windows = driver.getWindowHandles();
-            for (String window : windows) {
-                if (!window.equals(mainWindow)) {
-                    driver.switchTo().window(window);
-                    driver.close();
-                    driver.switchTo().window(mainWindow);
-                    break;
-                }
-            }
-        } catch (TimeoutException e) {
-            fail("После клика на логотип Яндекса должна открыться новая вкладка");
-        }
+        // Переключаемся на новое окно
+        homePage.switchToNewWindow();
+
+        // Проверяем, что переключились на другое окно
+        assertNotEquals("Должно открыться новое окно", mainWindow, homePage.getCurrentWindowHandle());
+
+        // Закрываем новое окно и возвращаемся
+        homePage.closeCurrentWindow();
+        homePage.switchToWindow(mainWindow);
     }
 }
 

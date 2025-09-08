@@ -5,20 +5,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.praktikum.BaseTest;
 import ru.praktikum.core.OrderData;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Параметризованный тест позитивного сценария заказа самоката.
  * Проверяет полный флоу оформления заказа с разными наборами данных и кнопками.
-
- * Исправления:
- * 1. Добавлена параметризация для тестирования обеих кнопок "Заказать"
- * 2. Переименован метод в соответствии с соглашением (добавлено слово "Test")
- * 3. Добавлена проверка на известный баг в Chrome
-
- * ВНИМАНИЕ: В Chrome есть известный баг, который не даёт оформить заказ.
- * Тест должен падать в Chrome, но проходить в других браузерах.
  */
 @RunWith(Parameterized.class)
 public class OrderFlowTest extends BaseTest {
@@ -64,12 +55,8 @@ public class OrderFlowTest extends BaseTest {
      * Увеличивает таймаут ожидания для этого теста.
 
      * Исправления:
-     * 1. Добавлена проверка на известный баг в Chrome
-     * 2. Тест должен падать в Chrome из-за бага
-
-     * ВНИМАНИЕ: Этот тест должен падать в Chrome из-за известного бага!
-     * Если тест проходит в Chrome, это означает, что-либо баг исправлен,
-     * либо тест написан некорректно и не обнаруживает баг.
+     * 1. Один ассерт, заказ сформирован.
+     * 2. Проверка не зависеть от браузера.
      */
     @Test
     public void testOrderCreationWithDifferentButtons() {
@@ -78,15 +65,8 @@ public class OrderFlowTest extends BaseTest {
 
         // Создаем заказ и проверяем результат
         boolean isCreated = orderService.createOrder(testData, useTopButton);
-        String browser = System.getProperty("browser", "chrome");
-
-        if ("chrome".equals(browser)) {
-            // В Chrome ожидаем, что заказ не создастся из-за бага
-            assertFalse("В Chrome заказ не должен создаваться из-за бага. Тест: " + testName, isCreated);
-        } else {
-            // В других браузерах ожидаем успешное создание заказа
+            // Ожидаем успешное создание заказа
             assertTrue("Заказ должен быть успешно создан для теста: " + testName, isCreated);
-        }
     }
 }
 

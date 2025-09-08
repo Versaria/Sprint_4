@@ -1,22 +1,26 @@
 package ru.praktikum.services.ui;
 
-import org.openqa.selenium.WebDriver;
 import ru.praktikum.core.FaqService;
 import ru.praktikum.pages.HomePage;
 
 /**
  * UI-реализация сервиса для работы с FAQ.
  * Использует Page Object HomePage для взаимодействия с элементами страницы.
+
+ * Исправления:
+ * 1. Убран неиспользуемый параметр WebDriver driver.
+ * 2. Обновлен конструктор для использования переданного HomePage,
+ * Конструктор принимает только HomePage
  */
 public class UIFaqService implements FaqService {
     private final HomePage homePage;
 
     /**
      * Конструктор сервиса.
-     * @param driver экземпляр WebDriver для взаимодействия с браузером
+     * @param homePage экземпляр HomePage для взаимодействия с браузером
      */
-    public UIFaqService(WebDriver driver) {
-        this.homePage = new HomePage(driver);
+    public UIFaqService(HomePage homePage) {
+        this.homePage = homePage;
     }
 
     @Override
