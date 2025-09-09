@@ -15,7 +15,7 @@
         <!-- Версии зависимостей -->
         <junit.version>4.13.2</junit.version>
         <selenium.version>4.15.0</selenium.version>
-        <webdrivermanager.version>5.6.3</webdrivermanager.version>
+        <webdrivermanager.version>6.1.0</webdrivermanager.version>
     </properties>
 
     <dependencies>
