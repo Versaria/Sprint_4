@@ -83,5 +83,3 @@ public class OrderStatusPage {
         }
     }
 }
-
-// тестовый комментарий

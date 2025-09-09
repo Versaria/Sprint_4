@@ -11,11 +11,6 @@ import static org.junit.Assert.*;
  * - валидация пустых полей формы
  * - проверка несуществующего заказа
  * - работа с логотипами Самоката и Яндекса
-
- * Исправления:
- * Использует только готовые методы Page Objects.
- * Нет прямого взаимодействия с WebDriver/WebDriverWait.
- * Все локаторы и методы работы с элементами вынесены в Page Objects.
  */
 public class AdditionalTest extends BaseTest {
 
@@ -102,5 +97,3 @@ public class AdditionalTest extends BaseTest {
         homePage.switchToWindow(mainWindow);
     }
 }
-
-// тестовый комментарий

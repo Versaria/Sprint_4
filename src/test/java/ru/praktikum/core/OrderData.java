@@ -30,5 +30,3 @@ public class OrderData {
         this.comment = comment;
     }
 }
-
-// тестовый комментарий

@@ -122,7 +122,6 @@ public class HomePage {
      * Получает handle текущего окна.
      * @return handle текущего окна
      */
-    // Добавлены методы для работы с окнами
     public String getCurrentWindowHandle() {
         return driver.getWindowHandle();
     }
@@ -176,5 +175,3 @@ public class HomePage {
         element.click();
     }
 }
-
-// тестовый комментарий

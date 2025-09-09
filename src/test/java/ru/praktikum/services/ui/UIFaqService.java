@@ -6,11 +6,6 @@ import ru.praktikum.pages.HomePage;
 /**
  * UI-реализация сервиса для работы с FAQ.
  * Использует Page Object HomePage для взаимодействия с элементами страницы.
-
- * Исправления:
- * 1. Убран неиспользуемый параметр WebDriver driver.
- * 2. Обновлен конструктор для использования переданного HomePage,
- * Конструктор принимает только HomePage
  */
 public class UIFaqService implements FaqService {
     private final HomePage homePage;
@@ -46,5 +41,3 @@ public class UIFaqService implements FaqService {
         }
     }
 }
-
-// тестовый комментарий

@@ -19,17 +19,12 @@ import java.time.Duration;
  * Базовый класс для всех тестов.
  * Содержит общую логику инициализации и завершения работы тестов.
  * Инициализирует WebDriver, сервисы и открывает базовую страницу.
-
- * Изменения:
- * 1. Добавлены методы для работы с окнами.
- * 2. Убраны неиспользуемые методы.
  */
 public class BaseTest {
     protected WebDriver driver;
     protected OrderService orderService;
     protected FaqService faqService;
     protected HomePage homePage;
-
     // Конфигурация таймаутов
     private static final int IMPLICIT_WAIT_SECONDS = 5;
     private static final String BASE_URL = "https://qa-scooter.praktikum-services.ru/";
@@ -106,5 +101,3 @@ public class BaseTest {
         homePage.closeCookieBanner();
     }
 }
-
-// тестовый комментарий

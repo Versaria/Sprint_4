@@ -53,21 +53,14 @@ public class OrderFlowTest extends BaseTest {
     /**
      * Тест проверяет успешное создание заказа с разными наборами данных через разные кнопки.
      * Увеличивает таймаут ожидания для этого теста.
-
-     * Исправления:
-     * 1. Один ассерт, заказ сформирован.
-     * 2. Проверка не зависеть от браузера.
      */
     @Test
     public void testOrderCreationWithDifferentButtons() {
         // Увеличиваем таймаут только для этого теста (из-за возможных задержек)
         orderService.setTimeout(30); // секунд
-
         // Создаем заказ и проверяем результат
         boolean isCreated = orderService.createOrder(testData, useTopButton);
-            // Ожидаем успешное создание заказа
-            assertTrue("Заказ должен быть успешно создан для теста: " + testName, isCreated);
+        // Ожидаем успешное создание заказа
+        assertTrue("Заказ должен быть успешно создан для теста: " + testName, isCreated);
     }
 }
-
-// тестовый комментарий

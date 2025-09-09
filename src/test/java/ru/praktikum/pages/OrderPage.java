@@ -9,10 +9,6 @@ import java.util.List;
 /**
  * Page Object для страницы оформления заказа.
  * Содержит методы для работы с формой заказа.
-
- * Исправления:
- * 1. Все локаторы вынесены в поля класса
- * 2. Использован String.format для формирования динамических локаторов
  */
 public class OrderPage {
     private final WebDriver driver;
@@ -113,7 +109,6 @@ public class OrderPage {
         }
     }
 
-    // Приватные вспомогательные методы
     /**
      * Выбирает станцию метро из выпадающего списка.
      * Использует String.format для формирования динамического локатора.
@@ -124,7 +119,6 @@ public class OrderPage {
         metroInput.clear();
         metroInput.sendKeys(stationName);
 
-        // Используем String.format для формирования локатора
         String xpath = String.format(
                 "//div[contains(@class, 'select-search__select')]//*[contains(text(), '%s')]",
                 stationName
@@ -161,7 +155,6 @@ public class OrderPage {
     private void selectRentalPeriod(String period) {
         driver.findElement(rentalPeriod).click();
 
-        // Используем String.format для формирования локатора
         String periodOptionXpath = String.format(RENTAL_PERIOD_OPTION, period);
         driver.findElement(By.xpath(periodOptionXpath)).click();
     }
@@ -197,5 +190,3 @@ public class OrderPage {
         }
     }
 }
-
-// тестовый комментарий

@@ -21,5 +21,3 @@ public interface FaqService {
      */
     String getAnswer(int index);
 }
-
-// тестовый комментарий

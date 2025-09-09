@@ -10,12 +10,6 @@ import ru.praktikum.pages.OrderPage;
 /**
  * UI-реализация сервиса заказов.
  * Инкапсулирует логику взаимодействия с UI для работы с заказами.
-
- * Исправления:
- * 1. Убрана прямая работа с WebDriver и WebDriverWait из методов
- * 2. Все взаимодействие с UI происходит через Page Objects
- * 3. Обновлен конструктор для использования переданного HomePage,
- * Конструктор принимает WebDriver и HomePage
  */
 public class UIOrderService implements OrderService {
     private final WebDriver driver;
@@ -27,7 +21,6 @@ public class UIOrderService implements OrderService {
      * @param homePage экземпляр HomePage
      * @throws IllegalArgumentException если driver равен null
      */
-    // Обновленный конструктор
     public UIOrderService(WebDriver driver, HomePage homePage) {
         if (driver == null) {
             throw new IllegalArgumentException("WebDriver cannot be null");
@@ -98,5 +91,3 @@ public class UIOrderService implements OrderService {
                 .isNotFoundDisplayed();
     }
 }
-
-// тестовый комментарий
